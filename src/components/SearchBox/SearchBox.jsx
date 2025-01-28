@@ -1,9 +1,13 @@
+import { useSelector, useDispatch } from "react-redux";
+import { changeFilter } from "../../redux/filtersSlice";
 import s from "./SearchBox.module.css";
-import PropTypes from "prop-types";
 
-const SearchBox = ({ searchQuery, setSearchQuery }) => {
+const SearchBox = () => {
+  const dispatch = useDispatch();
+  const searchQuery = useSelector((state) => state.filters.name);
+
   const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
+    dispatch(changeFilter(e.target.value));
   };
 
   return (
@@ -20,11 +24,6 @@ const SearchBox = ({ searchQuery, setSearchQuery }) => {
       </label>
     </div>
   );
-};
-
-SearchBox.propTypes = {
-  searchQuery: PropTypes.string.isRequired,
-  setSearchQuery: PropTypes.func.isRequired,
 };
 
 export default SearchBox;

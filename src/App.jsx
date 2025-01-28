@@ -8,8 +8,8 @@ function App() {
 	const [contacts, setContacts] = useState(() => {
     const savedContacts = localStorage.getItem("contacts");
     return savedContacts ? JSON.parse(savedContacts) : [];
-  });
-
+	});
+	
 	const [searchQuery, setSearchQuery] = useState("");
 
 	useEffect(() => {

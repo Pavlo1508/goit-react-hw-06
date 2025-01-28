@@ -1,8 +1,16 @@
-import s from "./ContactItem.module.css";
+import { useDispatch } from 'react-redux';
+import { deleteContact } from '../../redux/contactsSlice';
+import { FaUser, FaPhone } from 'react-icons/fa';
+import s from './ContactItem.module.css';
 import PropTypes from "prop-types";
-import { FaUser, FaPhone } from "react-icons/fa";
 
-const ContactItem = ({ id, name, number, onDelete }) => {
+const ContactItem = ({ id, name, number }) => {
+  const dispatch = useDispatch();
+
+  const handleDelete = () => {
+    dispatch(deleteContact(id));
+  };
+
   return (
     <div className={s.wrapper}>
       <div className={s.contact}>
@@ -16,14 +24,13 @@ const ContactItem = ({ id, name, number, onDelete }) => {
             <p>{number}</p>
           </div>
         </div>
-        <button className={s.btn} onClick={() => onDelete(id)}>
+        <button className={s.btn} onClick={handleDelete}>
           Delete
         </button>
       </div>
     </div>
   );
 };
-
 
 ContactItem.propTypes = {
   id: PropTypes.string.isRequired,

@@ -1,13 +1,9 @@
-import s from './ContactForm.module.css'
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { useDispatch } from "react-redux";
 import { nanoid } from "nanoid";
-import PropTypes from "prop-types";
+import { addContact } from "../../redux/contactsSlice";
+import s from "./ContactForm.module.css";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-
-const INITIAL_STATE = {
-	name: '',
-	number: '',
-}
 
 const validationSchema = Yup.object({
   name: Yup.string()
@@ -16,58 +12,53 @@ const validationSchema = Yup.object({
       "Ім'я може містити тільки літери та пробіли"
     )
     .min(3, "Ім'я має бути довшим ніж 3 літери")
-    .max(50, "Ім'я має бути корочшим ніж 50 літер")
     .required("Впишіть ім'я"),
   number: Yup.string()
     .matches(/^[\d-]+$/, "Номер телефону може містити тільки цифри та дефіси")
-    .min(3, "Номер телефону має бути довшим ніж 3 літери")
-    .max(50, "Номер телефону має бути корочшим ніж 50 літер")
     .required("Впишіть номер телефону"),
 });
 
-const ContactForm = ({ onAddContact }) => {
+const ContactForm = () => {
+  const dispatch = useDispatch();
+
   const handleSubmit = (values, actions) => {
-    const newContact = {
-      id: nanoid(),
-      name: values.name,
-      number: values.number,
-    };
-
-    onAddContact(newContact);
-
+    dispatch(
+      addContact({
+        id: nanoid(),
+        name: values.name,
+        number: values.number,
+      })
+    );
     actions.resetForm();
   };
 
   return (
     <div className={s.wrapper}>
       <Formik
-        onSubmit={handleSubmit}
-        initialValues={INITIAL_STATE}
+        initialValues={{ name: "", number: "" }}
         validationSchema={validationSchema}
+        onSubmit={handleSubmit}
       >
         {({ isValid, dirty }) => (
           <Form className={s.form}>
             <label className={s.label}>
               <span>Name</span>
               <Field
-                className={s.input}
                 name="name"
-                pattern="^[A-Za-zА-Яа-яЁё\s]+$"
+                className={s.input}
                 placeholder="Enter your name"
               />
               <ErrorMessage name="name" component="div" className={s.error} />
             </label>
-
             <label className={s.label}>
               <span>Number</span>
               <Field
-                className={s.input}
                 name="number"
+                className={s.input}
                 placeholder="Enter your number"
               />
               <ErrorMessage name="number" component="div" className={s.error} />
             </label>
-
             <button
               type="submit"
               className={s.button}
@@ -82,8 +73,4 @@ const ContactForm = ({ onAddContact }) => {
   );
 };
 
-ContactForm.propTypes = {
-  onAddContact: PropTypes.func.isRequired,
-};
-
-export default ContactForm
+export default ContactForm;
